@@ -56,3 +56,49 @@ def test_missing_config_file_is_clean_error(tmp_path, capsys):
     assert rc == 2
     err = capsys.readouterr().err
     assert "Config file not found" in err
+
+
+def test_watch_loads_config_and_calls_run_loop_with_it(tmp_path, monkeypatch):
+    """Watch wiring: parses CLI -> loads config -> hands it to run_loop.
+
+    We override `_cmd_watch`'s run_loop_fn via monkeypatch on the module
+    attribute the CLI looks up, then run the CLI like a user would.
+    The stub records the Config it was called with so we can assert the
+    end-to-end wiring without spinning up the daemon.
+    """
+    import json
+
+    from runpodboss import cli as cli_mod
+
+    cfg_path = tmp_path / "config.json"
+    cfg_path.write_text(
+        json.dumps(
+            {
+                "api_key": "test-key-1234567890",
+                "thresholds": [
+                    {"name": "warning", "below_usd": 10.0, "prompt": "p {balance}"},
+                ],
+                "state_file": str(tmp_path / "state.json"),
+                "log_file": str(tmp_path / "watch.log"),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    captured = {}
+
+    def fake_run_loop(cfg):
+        captured["cfg"] = cfg
+        return 0
+
+    # Patch the run_loop import that _cmd_watch defaults to.
+    monkeypatch.setattr(cli_mod, "run_loop", fake_run_loop)
+
+    rc = cli_mod.main(["-c", str(cfg_path), "watch"])
+    assert rc == 0
+    assert "cfg" in captured
+    assert captured["cfg"].api_key == "test-key-1234567890"
+    assert captured["cfg"].thresholds[0].name == "warning"
+    # And the log file directory must have been created so the file handler
+    # could attach without exploding.
+    assert (tmp_path / "watch.log").parent.is_dir()

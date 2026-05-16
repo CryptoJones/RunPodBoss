@@ -132,3 +132,21 @@ def test_claude_command_must_be_list_of_strings(tmp_path):
     p = _write(tmp_path, {**_base(), "claude_command": "claude -p"})
     with pytest.raises(ValueError, match="claude_command"):
         load_config(p)
+
+
+def test_runpod_url_defaults_to_production(tmp_path):
+    p = _write(tmp_path, _base())
+    cfg = load_config(p)
+    assert cfg.runpod_url == "https://api.runpod.io/graphql"
+
+
+def test_runpod_url_override_accepted(tmp_path):
+    p = _write(tmp_path, {**_base(), "runpod_url": "http://localhost:8080/graphql"})
+    cfg = load_config(p)
+    assert cfg.runpod_url == "http://localhost:8080/graphql"
+
+
+def test_runpod_url_rejects_non_http_scheme(tmp_path):
+    p = _write(tmp_path, {**_base(), "runpod_url": "file:///etc/passwd"})
+    with pytest.raises(ValueError, match="runpod_url"):
+        load_config(p)

@@ -13,6 +13,8 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from .runpod_api import RUNPOD_GRAPHQL_URL
+
 DEFAULT_CONFIG_PATH = Path("~/.runpodboss/config.json").expanduser()
 DEFAULT_STATE_PATH = Path("~/.runpodboss/state.json").expanduser()
 DEFAULT_LOG_PATH = Path("~/.runpodboss/runpodboss.log").expanduser()
@@ -60,6 +62,9 @@ class Config:
     # in addition to the Claude ping. Useful for a desktop notify-send /
     # Pushover / Slack webhook without baking those into RunPodBoss.
     extra_notify_command: tuple[str, ...] = field(default_factory=tuple)
+    # GraphQL endpoint URL. Override only for tests / local proxies. In
+    # production this is the public RunPod API.
+    runpod_url: str = RUNPOD_GRAPHQL_URL
 
 
 def load_config(path: str | Path = DEFAULT_CONFIG_PATH) -> Config:
@@ -132,6 +137,10 @@ def load_config(path: str | Path = DEFAULT_CONFIG_PATH) -> Config:
     if max_runtime < 0:
         raise ValueError("max_runtime_seconds must be >= 0 (0 = unbounded).")
 
+    runpod_url = str(raw.get("runpod_url") or RUNPOD_GRAPHQL_URL)
+    if not (runpod_url.startswith("http://") or runpod_url.startswith("https://")):
+        raise ValueError(f"'runpod_url' must be http(s); got {runpod_url!r}.")
+
     return Config(
         api_key=api_key,
         poll_interval_seconds=poll,
@@ -142,4 +151,5 @@ def load_config(path: str | Path = DEFAULT_CONFIG_PATH) -> Config:
         dry_run=bool(raw.get("dry_run", False)),
         max_runtime_seconds=max_runtime,
         extra_notify_command=extra_notify,
+        runpod_url=runpod_url,
     )

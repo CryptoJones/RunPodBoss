@@ -105,7 +105,7 @@ def run_loop(
 ) -> int:
     """Main daemon entry. Returns an exit code (0 on graceful stop)."""
     if client is None:
-        client = RunPodClient(cfg.api_key)
+        client = RunPodClient(cfg.api_key, url=cfg.runpod_url)
     state = load_state(cfg.state_file)
     started = now()
     cycle = 0

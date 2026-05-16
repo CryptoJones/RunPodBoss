@@ -16,10 +16,11 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 from . import __version__
-from .config import DEFAULT_CONFIG_PATH, load_config
+from .config import DEFAULT_CONFIG_PATH, Config, load_config
 from .monitor import run_loop
 from .runpod_api import RunPodAPIError, RunPodClient
 
@@ -90,7 +91,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def _cmd_check(cfg_path: str) -> int:
     cfg = load_config(cfg_path)
-    client = RunPodClient(cfg.api_key)
+    client = RunPodClient(cfg.api_key, url=cfg.runpod_url)
     try:
         balance = client.get_balance_usd()
         pods = client.list_pods()
@@ -107,7 +108,11 @@ def _cmd_check(cfg_path: str) -> int:
     return 0
 
 
-def _cmd_watch(cfg_path: str) -> int:
+def _cmd_watch(
+    cfg_path: str,
+    *,
+    run_loop_fn: Callable[[Config], int] | None = None,
+) -> int:
     cfg = load_config(cfg_path)
     # Route logs to both stderr and the configured log file.
     cfg.log_file.parent.mkdir(parents=True, exist_ok=True)
@@ -116,7 +121,10 @@ def _cmd_watch(cfg_path: str) -> int:
         logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s")
     )
     logging.getLogger().addHandler(file_handler)
-    return run_loop(cfg)
+    # Late binding: read from the module attribute each call so a test can
+    # monkeypatch `run_loop` and have the override take effect.
+    runner = run_loop_fn if run_loop_fn is not None else run_loop
+    return runner(cfg)
 
 
 def _cmd_init(output: str) -> int:
