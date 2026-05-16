@@ -340,4 +340,4 @@ Note: this project is a tool that interoperates with Claude Code and the
 Anthropic API. Claude and Anthropic are trademarks of Anthropic PBC; this
 project is not affiliated with, endorsed by, or sponsored by Anthropic.
 
-Proudly Made in Nebraska. Go Big Red! 🌽 https://xkcd.com/1319/
+Proudly Made in Nebraska. Go Big Red! 🌽 https://xkcd.com/2347/
