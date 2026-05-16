@@ -22,10 +22,18 @@ balance hits zero and leaves stranded artifacts.
 > the [Why this exists](#why-this-exists) section for the full incident
 > write-up + apology.*
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Codeberg](https://img.shields.io/badge/Codeberg-mirror-2185D0?logo=codeberg&logoColor=white)](https://codeberg.org/CryptoJones/RunPodBoss)
+[![Tests](https://github.com/CryptoJones/RunPodBoss/actions/workflows/test.yml/badge.svg)](https://github.com/CryptoJones/RunPodBoss/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?logo=apache)](LICENSE)
+[![RunPod](https://img.shields.io/badge/RunPod-github.com%2Frunpod-7c3aed?logo=github&logoColor=white)](https://github.com/runpod)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-spawned%20on%20threshold-D97757)](https://claude.com/claude-code)
+[![Codeberg](https://img.shields.io/badge/Codeberg-CryptoJones%2FRunPodBoss-2185D0?logo=codeberg&logoColor=white)](https://codeberg.org/CryptoJones/RunPodBoss)
 [![GitHub](https://img.shields.io/badge/GitHub-CryptoJones%2FRunPodBoss-181717?logo=github&logoColor=white)](https://github.com/CryptoJones/RunPodBoss)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Version](https://img.shields.io/badge/version-v0.1.0-orange)]()
+
+> Mirrored on both [GitHub](https://github.com/CryptoJones/RunPodBoss) and
+> [Codeberg](https://codeberg.org/CryptoJones/RunPodBoss). Issues filed on
+> either are welcome; commits are pushed to both.
 
 ---
 
