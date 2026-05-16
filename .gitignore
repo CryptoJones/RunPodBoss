@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Test / coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# RunPodBoss runtime artifacts — never commit these.
+# State and logs hold balance snapshots, pod IDs, and timestamps; not strictly
+# secret but absolutely operator-specific.
+config.json
+state.json
+*.log
+~/.runpodboss/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code session-local state (per-operator; never committed)
+.claude/

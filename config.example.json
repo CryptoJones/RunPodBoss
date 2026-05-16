@@ -1,0 +1,26 @@
+{
+  "api_key_env": "RUNPOD_API_KEY",
+  "poll_interval_seconds": 60,
+  "max_runtime_seconds": 0,
+  "state_file": "~/.runpodboss/state.json",
+  "log_file": "~/.runpodboss/runpodboss.log",
+  "claude_command": ["claude", "-p"],
+  "extra_notify_command": [],
+  "thresholds": [
+    {
+      "name": "warning",
+      "below_usd": 10.00,
+      "prompt": "RunPod balance is now $${balance:.2f}, below the $10 warning threshold. Running pods:\n{pods_json}\n\nFor each pod, decide: keep running, or terminate? If terminating, run `runpodctl pod delete <id>`. Be conservative — only terminate pods clearly past their useful life. Reply with a one-line summary of what you did."
+    },
+    {
+      "name": "critical",
+      "below_usd": 2.00,
+      "prompt": "RunPod balance CRITICAL: $${balance:.2f}, below the $2 threshold. Running pods:\n{pods_json}\n\nTerminate any pod that isn't actively producing artifacts. Use `runpodctl pod delete <id>` for each. Aggression > caution at this level."
+    },
+    {
+      "name": "emergency",
+      "below_usd": 0.50,
+      "prompt": "RunPod EMERGENCY: balance $${balance:.2f}. RunPod kills pods around the $0.10 mark, leaving stranded artifacts that cost $10 to recover. Terminate ALL pods immediately:\n{pods_json}\nRun `runpodctl pod delete <id>` on every single one. Don't ask, don't pause."
+    }
+  ]
+}

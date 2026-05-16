@@ -1,0 +1,61 @@
+[project]
+name = "runpodboss"
+version = "0.1.0"
+description = "Background credit-balance monitor for RunPod that pings a Claude agent when thresholds are crossed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Aaron K. Clark", email = "akclark@thenetwerk.net" }]
+keywords = ["runpod", "claude", "ai-agent", "credit-monitor", "guardrail"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Monitoring",
+]
+# Stdlib only by design — RunPodBoss is a tiny guardrail and shouldn't itself
+# need any pip-installed deps to run.
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "mypy>=1.9",
+]
+
+[project.urls]
+Homepage = "https://github.com/CryptoJones/RunPodBoss"
+Repository = "https://github.com/CryptoJones/RunPodBoss"
+Issues = "https://github.com/CryptoJones/RunPodBoss/issues"
+
+[project.scripts]
+runpodboss = "runpodboss.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["runpodboss"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
