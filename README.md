@@ -205,6 +205,36 @@ Tip: in Python format-string syntax, escape literal `$` by writing it once
 includes ready-to-use prompts for `warning` / `critical` / `emergency`
 tiers.
 
+## Triage integration (optional)
+
+If you also run [Triage](https://github.com/CryptoJones/Triage) — the
+companion meta-scheduler that watches signals and reorders its own
+priority queue — RunPodBoss can push a signal into Triage every time
+a threshold crosses, so any task tagged `runpod:<pod-id>` floats to
+the top of your queue immediately.
+
+No code changes — just use [`config.example.triage.json`](config.example.triage.json)
+instead of the plain example, or copy this `extra_notify_command`
+into your existing config:
+
+```json
+"extra_notify_command": [
+  "triage", "signal", "manual",
+  "--source", "runpodboss",
+  "--bump", "100",
+  "--ttl", "1800",
+  "--state", "{name}",
+  "--note", "RunPod balance ${balance:.2f} below {name} threshold"
+]
+```
+
+RunPodBoss runs this command alongside the `claude -p` action on every
+threshold cross. Triage's `rule_manual_bump` rule turns the signal into
+a +100 priority bump on every `runpod:<pod-id>`-tagged task.
+
+Full rationale (alternatives considered, why this design):
+[Triage/docs/runpodboss-integration.md](https://github.com/CryptoJones/Triage/blob/main/docs/runpodboss-integration.md).
+
 ## How the threshold state machine works
 
 ```
